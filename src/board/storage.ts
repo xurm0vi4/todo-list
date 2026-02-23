@@ -1,4 +1,5 @@
 import type { BoardState } from './types'
+import { COLUMN_ACCENT_COLORS } from './constants'
 
 const STORAGE_KEY = 'todo-board'
 
@@ -10,6 +11,10 @@ export function loadBoardState(): BoardState | null {
     const parsed = JSON.parse(raw) as BoardState
     return {
       ...parsed,
+      columns: parsed.columns.map((col, i) => ({
+        ...col,
+        accentColor: col.accentColor ?? COLUMN_ACCENT_COLORS[i % COLUMN_ACCENT_COLORS.length],
+      })),
       selectedTaskIds: [],
       searchQuery: '',
     }

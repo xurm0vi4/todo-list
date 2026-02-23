@@ -15,6 +15,7 @@ export interface Column {
   id: ColumnId
   title: string
   taskIds: TaskId[]
+  accentColor: string
 }
 
 export interface BoardState {

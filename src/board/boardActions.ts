@@ -10,6 +10,12 @@ export function createBoardActions(dispatch: Dispatch<BoardAction>) {
 
     deleteColumn: (columnId: ColumnId) => dispatch({ type: 'DELETE_COLUMN', columnId }),
 
+    renameColumn: (columnId: ColumnId, title: string) =>
+      dispatch({ type: 'RENAME_COLUMN', columnId, title }),
+
+    setColumnColor: (columnId: ColumnId, color: string) =>
+      dispatch({ type: 'SET_COLUMN_COLOR', columnId, color }),
+
     moveColumn: (fromId: ColumnId, toId: ColumnId) =>
       dispatch({ type: 'MOVE_COLUMN', fromId, toId }),
 
@@ -25,12 +31,8 @@ export function createBoardActions(dispatch: Dispatch<BoardAction>) {
 
     deleteTasks: (taskIds: TaskId[]) => dispatch({ type: 'DELETE_TASKS', taskIds }),
 
-    moveTask: (
-      taskId: TaskId,
-      fromColumnId: ColumnId,
-      toColumnId: ColumnId,
-      beforeTaskId?: TaskId
-    ) => dispatch({ type: 'MOVE_TASK', taskId, fromColumnId, toColumnId, beforeTaskId }),
+    moveTask: (taskId: TaskId, fromColumnId: ColumnId, toColumnId: ColumnId, beforeTaskId?: TaskId) =>
+      dispatch({ type: 'MOVE_TASK', taskId, fromColumnId, toColumnId, beforeTaskId }),
 
     toggleTask: (taskId: TaskId) => dispatch({ type: 'TOGGLE_TASK', taskId }),
 
@@ -48,6 +50,8 @@ export function createBoardActions(dispatch: Dispatch<BoardAction>) {
 
     moveSelectedTasksToColumn: (targetColumnId: ColumnId) =>
       dispatch({ type: 'MOVE_SELECTED_TASKS_TO_COLUMN', targetColumnId }),
+
+    clearSelection: () => dispatch({ type: 'CLEAR_SELECTION' }),
 
     // ui
     setStatusFilter: (filter: StatusFilter) => dispatch({ type: 'SET_STATUS_FILTER', filter }),

@@ -1,5 +1,6 @@
 import type { BoardState, Column, ColumnId, StatusFilter, Task, TaskId } from './types'
 import { loadBoardState } from './storage'
+import { COLUMN_ACCENT_COLORS } from './constants'
 
 export type BoardAction =
   | { type: 'ADD_COLUMN'; id: ColumnId; title: string }
@@ -17,11 +18,14 @@ export type BoardAction =
   | { type: 'TOGGLE_TASK'; taskId: TaskId }
   | { type: 'TOGGLE_TASKS_BULK'; taskIds: TaskId[]; completed: boolean }
   | { type: 'EDIT_TASK_TITLE'; taskId: TaskId; title: string }
+  | { type: 'RENAME_COLUMN'; columnId: ColumnId; title: string }
+  | { type: 'SET_COLUMN_COLOR'; columnId: ColumnId; color: string }
   | { type: 'SET_STATUS_FILTER'; filter: StatusFilter }
   | { type: 'SET_SEARCH_QUERY'; query: string }
   | { type: 'TOGGLE_TASK_SELECTION'; taskId: TaskId }
   | { type: 'SET_SELECTION_FOR_COLUMN'; columnId: ColumnId; selected: boolean }
   | { type: 'MOVE_SELECTED_TASKS_TO_COLUMN'; targetColumnId: ColumnId }
+  | { type: 'CLEAR_SELECTION' }
 
 export function createInitialBoardState(): BoardState {
   const stored = loadBoardState()
@@ -29,9 +33,9 @@ export function createInitialBoardState(): BoardState {
 
   return {
     columns: [
-      { id: 'todo', title: 'Todo', taskIds: [] },
-      { id: 'in-progress', title: 'In progress', taskIds: [] },
-      { id: 'done', title: 'Done', taskIds: [] },
+      { id: 'todo', title: 'Todo', taskIds: [], accentColor: COLUMN_ACCENT_COLORS[0] },
+      { id: 'in-progress', title: 'In progress', taskIds: [], accentColor: COLUMN_ACCENT_COLORS[1] },
+      { id: 'done', title: 'Done', taskIds: [], accentColor: COLUMN_ACCENT_COLORS[2] },
     ],
     tasksById: {},
     selectedTaskIds: [],
@@ -44,7 +48,9 @@ export function boardReducer(state: BoardState, action: BoardAction): BoardState
   switch (action.type) {
     // columns
     case 'ADD_COLUMN': {
-      const column: Column = { id: action.id, title: action.title, taskIds: [] }
+      const accentColor =
+        COLUMN_ACCENT_COLORS[state.columns.length % COLUMN_ACCENT_COLORS.length]
+      const column: Column = { id: action.id, title: action.title, taskIds: [], accentColor }
       return { ...state, columns: [...state.columns, column] }
     }
 
@@ -189,6 +195,24 @@ export function boardReducer(state: BoardState, action: BoardAction): BoardState
       }
     }
 
+    case 'RENAME_COLUMN': {
+      return {
+        ...state,
+        columns: state.columns.map((c) =>
+          c.id === action.columnId ? { ...c, title: action.title } : c,
+        ),
+      }
+    }
+
+    case 'SET_COLUMN_COLOR': {
+      return {
+        ...state,
+        columns: state.columns.map((c) =>
+          c.id === action.columnId ? { ...c, accentColor: action.color } : c,
+        ),
+      }
+    }
+
     // ui
     case 'SET_STATUS_FILTER': {
       return { ...state, statusFilter: action.filter }
@@ -249,6 +273,10 @@ export function boardReducer(state: BoardState, action: BoardAction): BoardState
       })
 
       return { ...state, columns, tasksById }
+    }
+
+    case 'CLEAR_SELECTION': {
+      return { ...state, selectedTaskIds: [] }
     }
 
     default:
