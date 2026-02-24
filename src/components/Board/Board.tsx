@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { useBoard } from '../../board/BoardContext'
 import { Column } from '../Column/Column'
 import './Board.scss'
@@ -7,11 +7,6 @@ function AddColumnCard() {
   const { addColumn } = useBoard()
   const [isEditing, setIsEditing] = useState(false)
   const [title, setTitle] = useState('')
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
-    if (isEditing) inputRef.current?.focus()
-  }, [isEditing])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -32,7 +27,7 @@ function AddColumnCard() {
       <div className="board__add-column-card">
         <form onSubmit={handleSubmit} className="board__add-column-form">
           <input
-            ref={inputRef}
+            autoFocus
             className="board__add-column-input"
             value={title}
             onChange={(e) => setTitle(e.target.value)}

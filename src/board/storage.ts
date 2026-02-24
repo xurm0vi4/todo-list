@@ -17,6 +17,7 @@ export function loadBoardState(): BoardState | null {
       })),
       selectedTaskIds: [],
       searchQuery: '',
+      statusFilter: 'all',
     }
   } catch {
     return null

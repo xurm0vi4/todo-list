@@ -113,13 +113,18 @@
 
 .task__input {
   width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   font-size: var(--font-size-sm);
+  font-family: inherit;
   border: none;
   outline: none;
   background: transparent;
   color: var(--color-text);
   padding: 0;
+  margin: 0;
   line-height: 1.45;
+  vertical-align: middle;
 }
 
 .task__actions {

@@ -7,12 +7,11 @@ import './TaskItem.scss'
 
 interface TaskItemProps {
   task: Task
+  isSelected: boolean
 }
 
-export function TaskItem({ task }: TaskItemProps) {
-  const { state, toggleTask, toggleTaskSelection, editTaskTitle } = useBoard()
-
-  const isSelected = state.selectedTaskIds.includes(task.id)
+export function TaskItem({ task, isSelected }: TaskItemProps) {
+  const { toggleTask, toggleTaskSelection, editTaskTitle } = useBoard()
 
   const [isEditing, setIsEditing] = useState(false)
   const [draft, setDraft] = useState(task.title)
@@ -20,18 +19,6 @@ export function TaskItem({ task }: TaskItemProps) {
   const [isDragOver, setIsDragOver] = useState(false)
 
   const ref = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
-    if (isEditing) {
-      inputRef.current?.focus()
-      inputRef.current?.select()
-    }
-  }, [isEditing])
-
-  useEffect(() => {
-    if (!isEditing) setDraft(task.title)
-  }, [task.title, isEditing])
 
   useEffect(() => {
     const el = ref.current
@@ -95,13 +82,13 @@ export function TaskItem({ task }: TaskItemProps) {
         onClick={() => toggleTask(task.id)}
         aria-label={task.completed ? 'Mark as incomplete' : 'Mark as complete'}
       >
-        {task.completed && <SmallCheckIcon />}
+        {task.completed ? <SmallCheckIcon /> : null}
       </button>
 
       <div className="task__body">
         {isEditing ? (
           <input
-            ref={inputRef}
+            ref={(el) => { el?.focus(); el?.select() }}
             className="task__input"
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
@@ -115,7 +102,7 @@ export function TaskItem({ task }: TaskItemProps) {
       </div>
 
       <div className="task__actions">
-        {!isEditing && (
+        {!isEditing ? (
           <button
             className="task__edit-btn"
             onClick={(e) => {
@@ -129,7 +116,7 @@ export function TaskItem({ task }: TaskItemProps) {
           >
             <PencilIcon />
           </button>
-        )}
+        ) : null}
         <input
           className="task__select"
           type="checkbox"

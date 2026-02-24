@@ -1,0 +1,123 @@
+.toolbar {
+  position: sticky;
+  top: var(--header-height);
+  z-index: 99;
+
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-xs) var(--space-xl);
+  height: var(--toolbar-height);
+
+  background: rgba(13, 17, 23, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  @media (max-width: 600px) {
+    padding: var(--space-xs) var(--space-md);
+    gap: var(--space-sm);
+  }
+}
+
+.toolbar__search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  max-width: 320px;
+}
+
+.toolbar__search-icon {
+  position: absolute;
+  left: var(--space-sm);
+  display: flex;
+  color: var(--color-text-dim);
+  pointer-events: none;
+}
+
+.toolbar__search-input {
+  width: 100%;
+  height: 30px;
+  padding: 0 var(--space-xl) 0 2rem;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  color: var(--color-text);
+  font-size: var(--font-size-xs);
+  font-family: var(--font-sans);
+  outline: none;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+
+  &::placeholder {
+    color: var(--color-text-dim);
+  }
+
+  &:focus {
+    border-color: var(--color-primary);
+    background: var(--color-surface);
+  }
+}
+
+.toolbar__search-clear {
+  position: absolute;
+  right: var(--space-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: none;
+  background: transparent;
+  color: var(--color-text-dim);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  padding: 0;
+  transition:
+    background 0.1s,
+    color 0.1s;
+
+  &:hover {
+    background: var(--color-surface-hover);
+    color: var(--color-text-muted);
+  }
+}
+
+.toolbar__filters {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: auto;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  padding: 2px;
+}
+
+.toolbar__filter-btn {
+  height: 26px;
+  padding: 0 0.75rem;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-full);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 0.15s,
+    color 0.15s;
+
+  &:hover {
+    color: var(--color-text);
+  }
+
+  &--active {
+    background: var(--color-surface-hover);
+    color: var(--color-text);
+    font-weight: 600;
+  }
+}

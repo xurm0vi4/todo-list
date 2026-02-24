@@ -3,6 +3,7 @@ import { draggable, dropTargetForElements } from '@atlaskit/pragmatic-drag-and-d
 import { useBoard } from '../../board/BoardContext'
 import { COLUMN_ACCENT_COLORS } from '../../board/constants'
 import type { Column as ColumnType } from '../../board/types'
+import { taskMatchesQuery } from '../../utils/search'
 import { TaskItem } from '../TaskItem/TaskItem'
 import './Column.scss'
 
@@ -74,16 +75,9 @@ export function Column({ column }: ColumnProps) {
   const [titleDraft, setTitleDraft] = useState(column.title)
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false)
 
-  const taskInputRef = useRef<HTMLInputElement>(null)
-  const titleInputRef = useRef<HTMLInputElement>(null)
-
   useEffect(() => {
-    if (isAddingTask) taskInputRef.current?.focus()
-  }, [isAddingTask])
-
-  useEffect(() => {
-    if (isEditingTitle) titleInputRef.current?.focus()
-  }, [isEditingTitle])
+    if (!isEditingTitle) setTitleDraft(column.title)
+  }, [column.title, isEditingTitle])
 
   const visibleTasks = useMemo(
     () =>
@@ -94,8 +88,9 @@ export function Column({ column }: ColumnProps) {
           if (state.statusFilter === 'completed') return task.completed
           if (state.statusFilter === 'incomplete') return !task.completed
           return true
-        }),
-    [column.taskIds, state.tasksById, state.statusFilter]
+        })
+        .filter((task) => taskMatchesQuery(task.title, state.searchQuery)),
+    [column.taskIds, state.tasksById, state.statusFilter, state.searchQuery]
   )
 
   const allVisibleSelected =
@@ -236,18 +231,18 @@ export function Column({ column }: ColumnProps) {
             title="Change column color"
             aria-label="Change column color"
           />
-          {isColorPickerOpen && (
+          {isColorPickerOpen ? (
             <ColorPalette
               currentColor={column.accentColor}
               onSelect={(color) => setColumnColor(column.id, color)}
               onClose={() => setIsColorPickerOpen(false)}
             />
-          )}
+          ) : null}
         </div>
 
         {isEditingTitle ? (
           <input
-            ref={titleInputRef}
+            autoFocus
             className="column__title-input"
             value={titleDraft}
             onChange={(e) => setTitleDraft(e.target.value)}
@@ -289,9 +284,13 @@ export function Column({ column }: ColumnProps) {
       </header>
 
       <div className="column__body">
-        {visibleTasks.length === 0 && <p className="column__empty">No tasks</p>}
+        {visibleTasks.length === 0 ? <p className="column__empty">No tasks</p> : null}
         {visibleTasks.map((task) => (
-          <TaskItem key={task.id} task={task} />
+          <TaskItem
+            key={task.id}
+            task={task}
+            isSelected={state.selectedTaskIds.includes(task.id)}
+          />
         ))}
       </div>
 
@@ -299,7 +298,7 @@ export function Column({ column }: ColumnProps) {
         {isAddingTask ? (
           <form className="column__add-task" onSubmit={handleAddTask}>
             <input
-              ref={taskInputRef}
+              autoFocus
               className="column__add-task-input"
               value={taskDraft}
               onChange={(e) => setTaskDraft(e.target.value)}
