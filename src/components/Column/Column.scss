@@ -151,6 +151,36 @@
   }
 }
 
+.column__rename-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-dim);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.1s, color 0.1s;
+
+  @media (hover: hover) {
+    display: none;
+  }
+
+  &:hover {
+    background: var(--color-surface-hover);
+    color: var(--color-text-muted);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--col-accent, var(--color-primary));
+    outline-offset: 1px;
+  }
+}
+
 .column__title-text {
   flex: 1;
   min-width: 0;

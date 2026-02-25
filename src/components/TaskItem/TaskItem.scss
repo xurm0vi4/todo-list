@@ -1,7 +1,7 @@
 .task {
   position: relative;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: var(--space-sm);
   padding: 8px var(--space-sm);
   background: var(--color-surface-2);
@@ -70,7 +70,6 @@
   flex-shrink: 0;
   width: 1rem;
   height: 1rem;
-  margin-top: 2px;
   border: 1.5px solid var(--color-border);
   border-radius: 50%;
   background: transparent;
@@ -100,6 +99,8 @@
 .task__body {
   flex: 1;
   min-width: 0;
+  display: flex;
+  align-items: center;
 }
 
 .task__highlight {
@@ -121,17 +122,17 @@
 .task__input {
   width: 100%;
   min-width: 0;
+  min-height: 1.45em;
   box-sizing: border-box;
   font-size: var(--font-size-sm);
   font-family: inherit;
+  line-height: 1.45;
   border: none;
   outline: none;
   background: transparent;
   color: var(--color-text);
   padding: 0;
   margin: 0;
-  line-height: 1.45;
-  vertical-align: middle;
 }
 
 .task__actions {
@@ -139,7 +140,6 @@
   display: flex;
   align-items: center;
   gap: 2px;
-  margin-top: 1px;
 }
 
 .task__edit-btn {

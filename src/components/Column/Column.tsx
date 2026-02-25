@@ -4,6 +4,7 @@ import { useBoard } from '../../board/BoardContext'
 import { COLUMN_ACCENT_COLORS } from '../../board/constants'
 import type { Column as ColumnType } from '../../board/types'
 import { taskMatchesQuery } from '../../utils/search'
+import { PencilIcon } from '../../icons'
 import { TaskItem } from '../TaskItem/TaskItem'
 import './Column.scss'
 
@@ -250,17 +251,31 @@ export function Column({ column }: ColumnProps) {
             onKeyDown={handleTitleKeyDown}
           />
         ) : (
-          <button
-            className="column__title"
-            onDoubleClick={() => {
-              setTitleDraft(column.title)
-              setIsEditingTitle(true)
-            }}
-            title="Double-click to rename"
-          >
-            <span className="column__title-text">{column.title}</span>
-            <span className="column__count">{visibleTasks.length}</span>
-          </button>
+          <>
+            <button
+              className="column__title"
+              onDoubleClick={() => {
+                setTitleDraft(column.title)
+                setIsEditingTitle(true)
+              }}
+              title="Double-click to rename"
+            >
+              <span className="column__title-text">{column.title}</span>
+              <span className="column__count">{visibleTasks.length}</span>
+            </button>
+            <button
+              type="button"
+              className="column__rename-btn"
+              onClick={() => {
+                setTitleDraft(column.title)
+                setIsEditingTitle(true)
+              }}
+              title="Rename column"
+              aria-label="Rename column"
+            >
+              <PencilIcon />
+            </button>
+          </>
         )}
 
         <div className="column__actions">
