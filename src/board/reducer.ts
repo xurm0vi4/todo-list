@@ -33,9 +33,9 @@ export function createInitialBoardState(): BoardState {
 
   return {
     columns: [
-      { id: 'todo', title: 'Todo', taskIds: [], accentColor: COLUMN_ACCENT_COLORS[0] },
-      { id: 'in-progress', title: 'In progress', taskIds: [], accentColor: COLUMN_ACCENT_COLORS[1] },
-      { id: 'done', title: 'Done', taskIds: [], accentColor: COLUMN_ACCENT_COLORS[2] },
+      { id: 'backend', title: 'Backend', taskIds: [], accentColor: COLUMN_ACCENT_COLORS[0] },
+      { id: 'frontend', title: 'Frontend', taskIds: [], accentColor: COLUMN_ACCENT_COLORS[1] },
+      { id: 'security', title: 'Security', taskIds: [], accentColor: COLUMN_ACCENT_COLORS[2] },
     ],
     tasksById: {},
     selectedTaskIds: [],
@@ -48,8 +48,7 @@ export function boardReducer(state: BoardState, action: BoardAction): BoardState
   switch (action.type) {
     // columns
     case 'ADD_COLUMN': {
-      const accentColor =
-        COLUMN_ACCENT_COLORS[state.columns.length % COLUMN_ACCENT_COLORS.length]
+      const accentColor = COLUMN_ACCENT_COLORS[state.columns.length % COLUMN_ACCENT_COLORS.length]
       const column: Column = { id: action.id, title: action.title, taskIds: [], accentColor }
       return { ...state, columns: [...state.columns, column] }
     }
@@ -199,7 +198,7 @@ export function boardReducer(state: BoardState, action: BoardAction): BoardState
       return {
         ...state,
         columns: state.columns.map((c) =>
-          c.id === action.columnId ? { ...c, title: action.title } : c,
+          c.id === action.columnId ? { ...c, title: action.title } : c
         ),
       }
     }
@@ -208,7 +207,7 @@ export function boardReducer(state: BoardState, action: BoardAction): BoardState
       return {
         ...state,
         columns: state.columns.map((c) =>
-          c.id === action.columnId ? { ...c, accentColor: action.color } : c,
+          c.id === action.columnId ? { ...c, accentColor: action.color } : c
         ),
       }
     }
