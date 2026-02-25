@@ -3,6 +3,7 @@ import { draggable, dropTargetForElements } from '@atlaskit/pragmatic-drag-and-d
 import { useBoard } from '../../board/BoardContext'
 import type { Task } from '../../board/types'
 import { PencilIcon, SmallCheckIcon } from '../../icons'
+import { splitHighlight } from '../../utils/search'
 import './TaskItem.scss'
 
 interface TaskItemProps {
@@ -11,7 +12,8 @@ interface TaskItemProps {
 }
 
 export function TaskItem({ task, isSelected }: TaskItemProps) {
-  const { toggleTask, toggleTaskSelection, editTaskTitle } = useBoard()
+  const { state, toggleTask, toggleTaskSelection, editTaskTitle } = useBoard()
+  const searchQuery = state.searchQuery
 
   const [isEditing, setIsEditing] = useState(false)
   const [draft, setDraft] = useState(task.title)
@@ -19,6 +21,14 @@ export function TaskItem({ task, isSelected }: TaskItemProps) {
   const [isDragOver, setIsDragOver] = useState(false)
 
   const ref = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (isEditing) {
+      inputRef.current?.focus()
+      inputRef.current?.select()
+    }
+  }, [isEditing])
 
   useEffect(() => {
     const el = ref.current
@@ -88,7 +98,7 @@ export function TaskItem({ task, isSelected }: TaskItemProps) {
       <div className="task__body">
         {isEditing ? (
           <input
-            ref={(el) => { el?.focus(); el?.select() }}
+            ref={inputRef}
             className="task__input"
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
@@ -97,7 +107,17 @@ export function TaskItem({ task, isSelected }: TaskItemProps) {
             onClick={(e) => e.stopPropagation()}
           />
         ) : (
-          <span className="task__title">{task.title}</span>
+          <span className="task__title">
+            {splitHighlight(task.title, searchQuery).map((seg, i) =>
+              seg.highlight ? (
+                <mark key={i} className="task__highlight">
+                  {seg.text}
+                </mark>
+              ) : (
+                <span key={i}>{seg.text}</span>
+              ),
+            )}
+          </span>
         )}
       </div>
 
